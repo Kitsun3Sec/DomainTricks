@@ -1,4 +1,4 @@
-# Execytion Policy Bypass:
+# Execution Policy Bypass:
 
 ```powershell
 powershell -ep bypass
@@ -49,11 +49,10 @@ Find-UserField -SearchField <field> -SearchTerm "<grepable term>"
 Get-UserProperty -Properties samaccountname,<property> |Select-String -Pattern  "<grapable term>"
 ```
 
-* Hint to **avoid detection**:
-
-    * Look for users with pwdlastset that is not very old;
-    * Look for users that logoncount is big;
-    * Look for users that badpwdcount is non-zero or a big numer;
+* Hint to avoid detection:
+    Look for users with pwdlastset that is not very old;
+    Look for users that logoncount is big;
+    Look for users that badpwdcount is non-zero or a big numer;
 
 
 # Enumerate Computer objets:
@@ -65,6 +64,13 @@ Get-NetComputer -Computer <computername>
 Get-NetComputer -<Property> <property>
 Get-NetComputer |Out-String -Stream | Select-String -Pattern "<pattern1>","<pattern2>",...
 Get-NetComputer -FullData | select term1,term2,...
+Get-NetComputer -Fulldata |Select  dnshostname,distinguishedname | Out-String -Stream |Select-String -pattern "OU=<organization-unit-name>"
+```
+
+## All Computers of a certain Organization Unit 
+
+```powershell
+Get-NetComputer -Fulldata |Select  dnshostname,distinguishedname | Out-String -Stream |Select-String -pattern "OU=<organization-unit-name>"
 ```
 
 # Enumerate live machines
@@ -111,4 +117,27 @@ Get-LoggedonLocal -ComputerName "<computername> // Requires remote registry enab
 Get-NetFileServer // retrieve all file servers on the domain
 Invoke-ShareFinder [-Versbose] [-ExcludeIPC -ExcludePrint -ExcludeStandard]
 Invoke-FileFinder [-Verbose] // Sensitive files on computers in the domain
+```
+
+# Group Policies
+
+```powerview
+Get-NetGPO
+Get-NetGPO [-ComputerName "<computername>"] [-GPOName "<{OU-UUID}>"] //UUID = gplink uid
+Get-NetGPOGroup
+Find-GPOComputerAdmin // users of a localgroup using GPO
+Find-GPOComputerAdmin [-ComputerName  "<computername>"]
+Find-GPOLocation -UserName <username> // machines where a user is member of a group
+```
+
+## GPOs Applied to machines of an specific OU
+
+```powershell
+Get-NetGPO -GPOName "{$(Get-NetOU -OUName "<organization_unit_name>" -FullData |select -ExpandProperty gplink | %{ $_.Split("{")[1].Split("}")[0]; })}"
+```
+
+# Organization Units:
+
+```powershell
+Get-NetOU [-FullData]
 ```
