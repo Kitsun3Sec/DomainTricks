@@ -199,7 +199,7 @@ A <-> B <-> C = A <-> C
 
 * Forest trusts
     * Trust established between root domain of different Forests
-    * Non-implicit. Always non-Transitive
+      * Non-implicit. Always non-Transitive
 
 # Forests are considered a security boundary
 
