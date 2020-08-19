@@ -50,9 +50,10 @@ Get-UserProperty -Properties samaccountname,<property> |Select-String -Pattern  
 ```
 
 * Hint to avoid detection:
-    Look for users with pwdlastset that is not very old;
-    Look for users that logoncount is big;
-    Look for users that badpwdcount is non-zero or a big numer;
+
+    * Look for users with pwdlastset that is not very old;
+    * Look for users that logoncount is big;
+    * Look for users that badpwdcount is non-zero or a big numer;
 
 
 # Enumerate Computer objets:
@@ -125,6 +126,7 @@ Invoke-FileFinder [-Verbose] // Sensitive files on computers in the domain
 Get-NetGPO
 Get-NetGPO [-ComputerName "<computername>"] [-GPOName "<{OU-UUID}>"] //UUID = gplink uid
 Get-NetGPOGroup
+Get-NetGroupMember -GroupName <groupname>   
 Find-GPOComputerAdmin // users of a localgroup using GPO
 Find-GPOComputerAdmin [-ComputerName  "<computername>"]
 Find-GPOLocation -UserName <username> // machines where a user is member of a group
@@ -140,4 +142,76 @@ Get-NetGPO -GPOName "{$(Get-NetOU -OUName "<organization_unit_name>" -FullData |
 
 ```powershell
 Get-NetOU [-FullData]
+```
+
+# ACLS
+
+```powershell
+Get-ObjectACL
+Get-ObjectACL [-SamAccountName <account_name>] [-ResolveGUIDs]
+Get-ObjectACL [-ADSprefix 'ads'] [-ADSPath '<ads_path>'] [-Verbose]
+Get-PathAcl -Path "aclpath"  // get acls associated with the path
+```
+
+* Most important properties of an ACE:
+    * ObjectDN
+    * IdentityRefrence
+    * ActiveDirectoryRights
+
+## Scan for interesting ACEs
+
+```powershell
+Invoke-ACLScanner -ResolveGUIDs
+```
+
+# Domain Trusts
+
+* One-way trust 
+    
+    * The domain B is trusted by domain A, therefore domain B can access resources from domain A, not the other way around
+
+```
+A <- B
+```
+
+* Two-way trust
+    * Both domains trust each othe and therefore they can access each other's resources
+
+```
+A <-> B
+```
+
+* Transitive Trusts
+    * Domain A have a two-way trust with domain B which also has it with domain C, therefore, domain C can access resources from domain A and the other way around is also valid.
+
+```
+A <-> B <-> C = A <-> C
+```
+
+* Tree-root trust 
+
+    * Created automatically whenever a new domain tree is added to the forest root.
+
+* External Trusts
+
+    * Trust established between two non-root domain from diferent forests
+        * not transitive
+
+* Forest trusts
+    * Trust established between root domain of different Forests
+    * Non-implicit. Always non-Transitive
+
+# Forests are considered a security boundary
+
+**All the intra-forest trusts are automatic**
+
+# Trusts
+
+```powershell
+Get-NetDomainTrust
+Get-NetForest [-Forest '<forest>']
+Get-NetForestDomain [-Forest '<forest>']
+Get-NetForestCatalog [-Forest '<forest>']
+Get-NetForestTrust [-Forest '<forest>']
+
 ```
