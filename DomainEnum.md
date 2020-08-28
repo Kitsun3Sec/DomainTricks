@@ -68,7 +68,7 @@ Get-NetComputer -FullData | select term1,term2,...
 Get-NetComputer -Fulldata |Select  dnshostname,distinguishedname | Out-String -Stream |Select-String -pattern "OU=<organization-unit-name>"
 ```
 
-## All Computers of a certain Organization Unit 
+## All Computers of a certain Organization Unit
 
 ```powershell
 Get-NetComputer -Fulldata |Select  dnshostname,distinguishedname | Out-String -Stream |Select-String -pattern "OU=<organization-unit-name>"
@@ -126,7 +126,7 @@ Invoke-FileFinder [-Verbose] // Sensitive files on computers in the domain
 Get-NetGPO
 Get-NetGPO [-ComputerName "<computername>"] [-GPOName "<{OU-UUID}>"] //UUID = gplink uid
 Get-NetGPOGroup
-Get-NetGroupMember -GroupName <groupname>   
+Get-NetGroupMember -GroupName <groupname>
 Find-GPOComputerAdmin // users of a localgroup using GPO
 Find-GPOComputerAdmin [-ComputerName  "<computername>"]
 Find-GPOLocation -UserName <username> // machines where a user is member of a group
@@ -166,8 +166,8 @@ Invoke-ACLScanner -ResolveGUIDs
 
 # Domain Trusts
 
-* One-way trust 
-    
+* One-way trust
+
     * The domain B is trusted by domain A, therefore domain B can access resources from domain A, not the other way around
 
 ```
@@ -188,7 +188,7 @@ A <-> B
 A <-> B <-> C = A <-> C
 ```
 
-* Tree-root trust 
+* Tree-root trust
 
     * Created automatically whenever a new domain tree is added to the forest root.
 
@@ -199,7 +199,7 @@ A <-> B <-> C = A <-> C
 
 * Forest trusts
     * Trust established between root domain of different Forests
-      * Non-implicit. Always non-Transitive
+    * Non-implicit. Always non-Transitive
 
 # Forests are considered a security boundary
 
@@ -214,4 +214,28 @@ Get-NetForestDomain [-Forest '<forest>']
 Get-NetForestCatalog [-Forest '<forest>']
 Get-NetForestTrust [-Forest '<forest>']
 
+```
+
+# Local Admin Access
+
+* Intrusive and noisy.
+
+```powershell
+Find-LocalAdminAccess [-Verbose] // Calls Get-NetComputer and use multi-threaded
+                                 // Invoke-CheckLocalAdminAccess on each machine
+Invoke-CheckLocalAdminAccess
+Invoke-UserHunter [-GroupName "groupname"] -[CheckAccess]
+
+```
+
+# Get user sessions
+
+```
+Get-NetSession [-Computername "<computername>"]
+```
+
+# Remove NetSessionEnum permission from the Authenticated Users Groups
+
+```
+.\NetCease.ps1
 ```
