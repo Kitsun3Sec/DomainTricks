@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  Pentest-Cheat-Sheets<br>
+  RedTeam-Cheat-Sheets<br>
     @n3k00n3 | @UserXGnu
 </p>
 
