@@ -257,6 +257,10 @@ Get-NetSession [-Computername "<computername>"]
 
 # Interesting files to look!
 
+```powershel
+GET-PSReadlineOptions
+```
+
 Powershell History
 ```
 C:\Users\<username>\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\Console Host_history.txt
