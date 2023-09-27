@@ -254,3 +254,16 @@ Get-NetSession [-Computername "<computername>"]
 ```
 .\NetCease.ps1
 ```
+
+# Interesting files to look!
+
+Powershell History
+```
+C:\Users\<username>\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\Console Host_history.txt
+```
+
+Autologon Credentials
+
+```powershell
+Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "DefaultPassword"
+```
